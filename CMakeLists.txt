@@ -18,10 +18,12 @@ else()
 endif()
 
 
+# Définissez les fichiers source
+file(GLOB SOURCE_FILES "src/*")
+
 # files to compile
-add_executable (conic src/main.cpp src/Geogebra_conics.cpp src/Geogebra_conics.hpp 
-                src/Entry.cpp src/Entry.hpp src/Directory.cpp src/Directory.hpp 
-                src/Maths.cpp src/Maths.hpp)
+add_executable (conic ${SOURCE_FILES})
+
 
 # compilation options
 target_compile_features(conic PRIVATE cxx_std_11) # use at least c++ 11
