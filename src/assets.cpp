@@ -11,8 +11,11 @@ Eigen::VectorXd random_point(bool isHomogeneous, float startInterval, float endI
     // Generate pt(0) and pt(1) coordinates in the interval passed as parameter
     pt(0) = startInterval + static_cast<float>(std::rand()) / RAND_MAX * (endInterval - startInterval);
     pt(1) = startInterval + static_cast<float>(std::rand()) / RAND_MAX * (endInterval - startInterval);
+
     // Check if we are in projective geometry and if we need to add a homogeneous coordinate
-    // pt(2) = isHomogeneous ? 1.0 : 0.0;
+    if (numberCoordinates > 2) {
+        pt(2) = isHomogeneous ? 1.0 : 0.0;    
+    }
 
     return pt;
 }
@@ -25,4 +28,12 @@ Eigen::MatrixXd generate_matrix(std::vector<Eigen::VectorXd> points) {
         pts.row(i) = points[i];
     }
     return pts;
+}
+
+Eigen::VectorXd homoToEucli(Eigen::VectorXd& point) {
+    assert(point[2]!=0 && "Point a l'infini");
+
+    Eigen::VectorXd euclideanPoint(2);
+    euclideanPoint << point[0] / point[2], point[1] / point[2];
+    return euclideanPoint;
 }

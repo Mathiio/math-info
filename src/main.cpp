@@ -8,7 +8,7 @@
 #include "Conics.hpp"
 #include "Assets.hpp"
 
-bool isHomogeneous = false;
+bool isGeomProject = false;
 int startInterval = -5;
 int endInterval = 5;
 
@@ -30,17 +30,21 @@ int main() {
   std::vector<Eigen::VectorXd> points;
 
   for (size_t i = 0; i < numberPoints; i++) {
-    Eigen::VectorXd point = random_point(isHomogeneous, startInterval, endInterval);
+    Eigen::VectorXd point = random_point(isGeomProject, startInterval, endInterval);
     points.push_back(point);
+
+    if(isGeomProject) point = homoToEucli(point);
     viewer.push_point(point, "pt", 200, 0, 0);
   }
 
   // draw conic
-  Eigen::VectorXd conic = conicCoefficients(points);
+  Eigen::VectorXd conic = conicCoefficients(points, isGeomProject);
+  std::cout << conic.size() << std::endl;
   viewer.push_conic(conic, 0, 0, 200);
 
   // draw line
-  viewer.push_line(points[0], pointTangent(points[0], conic),  200,200,0);
+  if(isGeomProject) points[0] = homoToEucli(points[0]);
+  viewer.push_line(points[0], pointTangent(points[0], conic), 200, 200, 0);
 
   // render
   viewer.display(); // on terminal

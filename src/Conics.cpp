@@ -1,23 +1,25 @@
+#include <iostream>
 #include "Assets.hpp"
 #include "Conics.hpp"
 
 
-Eigen::VectorXd conicCoefficients(std::vector<Eigen::VectorXd> points) {
+Eigen::VectorXd conicCoefficients(std::vector<Eigen::VectorXd> points, bool isHomogeneous) {
+  Eigen::MatrixXd A(points.size(), 6);
+  Eigen::VectorXd b(points.size());
 
-  Eigen::MatrixXd m_points = generate_matrix(points);
-  Eigen::MatrixXd A(5, 6);
-  Eigen::VectorXd b(5);
+  for (size_t i = 0; i < points.size(); ++i) {
+    double x = points[i](0);
+    double y = points[i](1);
+    double w = (isHomogeneous) ? points[i](2) : 1.0;
 
-  for (int i = 0; i < 5; ++i) {
-    double x = m_points(i, 0);
-    double y = m_points(i, 1);
+    // Remplissez les termes en fonction de la géométrie
+    A.row(i) << x * x, x * y, y * y, x * w, y * w, w * w;
 
-    A.row(i) << x * x, x * y, y * y, x, y, 1.0;
     b(i) = 0.0;
   }
 
   // Calcul du noyau de A avec une décomposition en valeurs singulières
-  Eigen::JacobiSVD <Eigen::MatrixXd> svd (A, Eigen::ComputeThinU | Eigen::ComputeFullV);
+  Eigen::JacobiSVD<Eigen::MatrixXd> svd(A, Eigen::ComputeThinU | Eigen::ComputeFullV);
   Eigen::VectorXd solution = svd.matrixV().rightCols(1);
 
   return solution;
