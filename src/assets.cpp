@@ -17,15 +17,26 @@ Eigen::MatrixXd generate_matrix(const std::vector<Point>& points) {
 }
 
 Eigen::VectorXd homoToEucli(const Point& point) {
-    Eigen::MatrixXd euclideanPoint((point.getX()/point.getW()), (point.getY()/point.getW()));
+    Eigen::VectorXd euclideanPoint(2);
+    euclideanPoint << (point.getX()/point.getW()), (point.getY()/point.getW());
     return euclideanPoint;
 }
 
 void displayPoint(const Point& point, Viewer_conic& viewer) {
     Eigen::VectorXd pt(2);
+
     pt << point.getX(), point.getY();
 
-    viewer.push_point(point, "pt", 200, 0, 0);
+    viewer.push_point(pt, "pt", 200, 0, 0);
+}
+
+void displayTangent(const Point& point, const Point& point2, Viewer_conic& viewer) {
+    Eigen::VectorXd pt1(2), pt2(2);
+    
+    pt1 << point.getX(), point.getY();
+    pt2 << point2.getX(), point2.getY();
+    //pt2 << line.getPt1().getX(), line.getPt1().getY();
+    viewer.push_line(pt1, pt2, 200, 200, 0);
 }
 
 

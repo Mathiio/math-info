@@ -43,29 +43,27 @@ int main() {
 
 
   // draw points
-  Point points;
-s
+  std::vector<Point> points;
+
   for (size_t i = 0; i < numberPoints; i++) {
     Point point;
     points.push_back(point);
-
-    //if(isGeomProject) point = homoToEucli(point);
-    /*Eigen::VectorXd pt(2);
-    pt << point.getX(), point.getY();
-
-    viewer.push_point(pt, "pt", 200, 0, 0);*/
     displayPoint(point, viewer);
   }
 
   // draw conic
-  /*Eigen::VectorXd conic = conicCoefficients(points);
-  std::cout << conic.size() << std::endl;
-  viewer.push_conic(conic, 0, 0, 200);*/
+  Eigen::VectorXd conic = conicCoefficients(points);
+  viewer.push_conic(conic, 0, 0, 200);
 
   // draw line
   Line line1;
-  //if(isGeomProject) line1.setPt1() = homoToEucli(line1.getPt1());
-  //viewer.push_line(line1.getPt1(), pointTangent(line1.getPt1(), conic), 200, 200, 0);
+  //if(isGeomProject) line1.setPt1(homoToEucli(line1.getPt1()));
+
+  Point pointT; 
+  pointT=pointTangent(points[0], conic);
+  displayPoint(pointT, viewer);
+  displayTangent(points[0], pointT, viewer);
+  
 
   // render
   viewer.display(); // on terminal
