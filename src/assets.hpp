@@ -2,6 +2,8 @@
 #include <Eigen/Dense>
 #include <vector>
 
-Eigen::VectorXd random_point(bool isHomogeneous, float startInterval, float endInterval);
-Eigen::MatrixXd generate_matrix(std::vector<Eigen::VectorXd> points);
-Eigen::VectorXd homoToEucli(Eigen::VectorXd& point);
+#include "Point.hpp"
+
+Eigen::MatrixXd generate_matrix(const std::vector<Point>& points);
+Eigen::VectorXd homoToEucli(const Point& point);
+void displayPoint(const Point& point);

@@ -1,39 +1,51 @@
 #include "Assets.hpp"
+#include "Point.hpp"
+#include "Geogebra_conics.hpp"
 #include <iostream>
 #include <cstdlib> // for std::rand
 #include <ctime> // for std::time
 
-// Generate a random point in a define interval 
-Eigen::VectorXd random_point(bool isHomogeneous, float startInterval, float endInterval) {
-    size_t numberCoordinates = isHomogeneous ? 3 : 2;
-    Eigen::VectorXd pt(numberCoordinates);
 
-    // Generate pt(0) and pt(1) coordinates in the interval passed as parameter
-    pt(0) = startInterval + static_cast<float>(std::rand()) / RAND_MAX * (endInterval - startInterval);
-    pt(1) = startInterval + static_cast<float>(std::rand()) / RAND_MAX * (endInterval - startInterval);
-
-    // Check if we are in projective geometry and if we need to add a homogeneous coordinate
-    if (numberCoordinates > 2) {
-        pt(2) = isHomogeneous ? 1.0 : 0.0;    
-    }
-
-    return pt;
-}
-
-// Generate a matrix of "pointsNumber" points 
-Eigen::MatrixXd generate_matrix(std::vector<Eigen::VectorXd> points) {
-    Eigen::MatrixXd pts(points.size(), points[0].size());
-    // Add to a matrix a "pointsNumber" points 
+Eigen::MatrixXd generate_matrix(const std::vector<Point>& points) {
+    Eigen::MatrixXd pts(points.size(), 3); // Assuming points are 3D (Eigen::Vector3d)
+    
     for (size_t i = 0; i < points.size(); i++) {
-        pts.row(i) = points[i];
+        pts.row(i) << points[i].getX(), points[i].getY(), points[i].getW();
     }
+    
     return pts;
 }
 
-Eigen::VectorXd homoToEucli(Eigen::VectorXd& point) {
-    assert(point[2]!=0 && "Point a l'infini");
-
-    Eigen::VectorXd euclideanPoint(2);
-    euclideanPoint << point[0] / point[2], point[1] / point[2];
+Eigen::VectorXd homoToEucli(const Point& point) {
+    Eigen::MatrixXd euclideanPoint((point.getX()/point.getW()), (point.getY()/point.getW()));
     return euclideanPoint;
 }
+
+void displayPoint(const Point& point, Viewer_conic& viewer) {
+    Eigen::VectorXd pt(2);
+    pt << point.getX(), point.getY();
+
+    viewer.push_point(point, "pt", 200, 0, 0);
+}
+
+
+
+// Generate a matrix of "pointsNumber" points 
+// Eigen::MatrixXd generate_matrix(std::vector<Eigen::VectorXd> points) {
+//     Eigen::MatrixXd pts(points.size(), points[0].size());
+//     // Add to a matrix a "pointsNumber" points 
+//     for (size_t i = 0; i < points.size(); i++) {
+//         pts.row(i) = points[i];
+//     }
+//     return pts;
+// }
+
+// Point<float> homoToEucli(Point<float>& point) {
+//     //assert(point[2]!=0 && "Point a l'infini");
+
+//     Point<float> euclideanPoint;
+//     euclideanPoint.setX(point.getX());
+//     euclideanPoint.setY(point.getY());
+//     euclideanPoint.setW(point.getW());
+//     return euclideanPoint;
+// }
