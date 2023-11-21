@@ -7,12 +7,26 @@
 #include "Geogebra_conics.hpp"
 #include "Conics.hpp"
 #include "Assets.hpp"
+#include "Point.hpp"
+#include "Line.hpp"
 
-bool isGeomProject = false;
+bool isGeomProject = true;
 int startInterval = -5;
 int endInterval = 5;
 
 int main() {
+
+  // Création d'un Point avec des coordonnées aléatoires
+  Point pt;
+
+  // Affichage des coordonnées du point
+  std::cout << "Coordonnées du point aléatoire : " << std::endl;
+  std::cout << "X : " << pt.getX() << std::endl;
+  std::cout << "Y : " << pt.getY() << std::endl;
+  std::cout << "W : " << pt.getW() << std::endl;
+
+
+
   size_t numberPoints = 5;
   std::srand(static_cast<unsigned>(std::time(0)));
   // the viewer will open a file whose path is writen in hard (bad!!). 
@@ -26,25 +40,30 @@ int main() {
   viewer.show_value(false);
   viewer.show_label(true);
 
+
+
   // draw points
-  std::vector<Eigen::VectorXd> points;
+  std::vector<Point> points;
 
   for (size_t i = 0; i < numberPoints; i++) {
-    Eigen::VectorXd point = random_point(isGeomProject, startInterval, endInterval);
+    Point point;
     points.push_back(point);
-
-    if(isGeomProject) point = homoToEucli(point);
-    viewer.push_point(point, "pt", 200, 0, 0);
+    displayPoint(point, viewer);
   }
 
   // draw conic
-  Eigen::VectorXd conic = conicCoefficients(points, isGeomProject);
-  std::cout << conic.size() << std::endl;
+  Eigen::VectorXd conic = conicCoefficients(points);
   viewer.push_conic(conic, 0, 0, 200);
 
   // draw line
-  if(isGeomProject) points[0] = homoToEucli(points[0]);
-  viewer.push_line(points[0], pointTangent(points[0], conic), 200, 200, 0);
+  Line line1;
+  //if(isGeomProject) line1.setPt1(homoToEucli(line1.getPt1()));
+
+  Point pointT; 
+  pointT=pointTangent(points[0], conic);
+  displayPoint(pointT, viewer);
+  displayTangent(points[0], pointT, viewer);
+  
 
   // render
   viewer.display(); // on terminal
