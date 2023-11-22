@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Assets.hpp"
+#include "Draw.hpp"
 #include "Conics.hpp"
 #include "Point.hpp"
 
@@ -21,20 +21,14 @@ Eigen::VectorXd conicCoefficients(const std::vector<Point>& points) {
   return solution;
 }
 
-
 Point pointTangent(const Point& point, const Eigen::VectorXd& conic) {
   double slope = -(2 * conic[0] * point.getX() + conic[1] * point.getY() + conic[3]) /
                   (conic[1] * point.getX() + 2 * conic[2] * point.getY() + conic[4]);
                 
-  std::cout << std::endl << "//////////// DEBUG //////////////" << std::endl;
-  std::cout << "Slope : " << slope << std::endl;
-
-
   double yIntercept = point.getY() - slope * point.getX();
 
   Point secondPoint(point.getX()+1, slope * (point.getX()+1) + yIntercept, 1);
   secondPoint-point;
-  
   
   return secondPoint;
 }

@@ -35,13 +35,13 @@ public:
     void setY(float y) {m_coordinates(1) = y;};
     void setW(float w) {m_coordinates(2) = w;};
 
-    Point operator-(const Point& other) {
+    void operator-(const Point& other) {
         this->setX(this->getX() - other.getX());
         this->setY(this->getY() - other.getY());
         this->setW(this->getW() - other.getW());
     }
 
-    Point operator=(const Point& other) {
+    void operator=(const Point& other) {
         this->setX(other.getX());
         this->setY(other.getY());
         this->setW(other.getW());
