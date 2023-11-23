@@ -18,7 +18,7 @@
 //  • 4 --> 6 points + conic
 //  • 5 --> 5 tangents + conic
 
-const unsigned int step = 4;
+const unsigned int step = 3;
 
 //* Lower and upper bound of the coordinate range for random points
 int startInterval = -5;
