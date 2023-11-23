@@ -25,16 +25,17 @@ public:
     // Destructor
     ~Point() = default;
 
-    // Getter
+    // Getters
     float getX() const {return m_coordinates(0);};
     float getY() const {return m_coordinates(1);};
     float getW() const {return m_coordinates(2);};
 
-    // Setter
+    // Setters
     void setX(float x) {m_coordinates(0) = x;};
     void setY(float y) {m_coordinates(1) = y;};
     void setW(float w) {m_coordinates(2) = w;};
 
+    // Operators
     void operator-(const Point& other) {
         this->setX(this->getX() - other.getX());
         this->setY(this->getY() - other.getY());
@@ -48,6 +49,7 @@ public:
     }
 
 private:
+    // Method
     float randomCoordinate() const {
         return -5.0f + static_cast<float>(std::rand()) / RAND_MAX * (5.0f - (-5.0f));
     }

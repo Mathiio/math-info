@@ -8,4 +8,4 @@
 
 
 void drawPoint(const Point& point, Viewer_conic &viewer);
-void drawLine(const Point& point, const Point& point2, Viewer_conic& viewer);
+void drawLine(const Line& line, Viewer_conic& viewer);

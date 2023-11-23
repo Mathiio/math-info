@@ -1,48 +1,50 @@
+// Librairies
 #include <iostream>
 #include <vector>
-#include <ctime> // for std::time
-
+#include <ctime>
 #include <Eigen/Dense>
 
+// Header files
 #include "Geogebra_conics.hpp"
 #include "Conics.hpp"
 #include "Draw.hpp"
 #include "Point.hpp"
 #include "Line.hpp"
 
-// Choose what you want the display to see
+//* Select the desired display
 //  • 1 --> 5 points
 //  • 2 --> 5 points + conic
 //  • 3 --> 5 points + conic + tangent
 //  • 4 --> 6 points + conic
-//  • 5 --> 5 tangents
+//  • 5 --> 5 tangents + conic
 
-const unsigned int step = 5;
+const unsigned int step = 4;
 
-// Lower and upper bound of the coordinate range for random points
+//* Lower and upper bound of the coordinate range for random points
 int startInterval = -5;
 int endInterval = 5;
 
 int main() {
+  //* Check if step is valid
   assert(step >= 1 && step <= 5);
-  size_t numberPoints = step == 4 ? 6 : 5;  
 
   std::srand(static_cast<unsigned>(std::time(0)));
-  // the viewer will open a file whose path is writen in hard (bad!!). 
-  // So you should either launch your program from the fine directory or change the path to this file.
   Viewer_conic viewer;
 
-  // viewer options
+  //* Viewer options
   viewer.set_background_color(250, 250, 255);
   viewer.show_axis(true);
   viewer.show_grid(false);
   viewer.show_value(false);
   viewer.show_label(true);
 
-  //* Draw points
   if (step != 5)  {
+    //* Number of points to determine the conic
+    size_t numberPoints = step == 4 ? 6 : 5;  
+
     std::vector<Point> points;
 
+    //* Draw points
     for (size_t i = 0; i < numberPoints; i++) {
       Point point;
       points.push_back(point);
@@ -59,21 +61,33 @@ int main() {
         Point pointT; 
         pointT = pointTangent(points[0], conic);
 
-        drawLine(points[0], pointT, viewer);
+        Line tangent(points[0], pointT);
+        drawLine(tangent, viewer);
       }
     }
   }
+
+  //* Step 5
   else if (step == 5) {
-    //* Draw line
+    std::vector<Line> tangents;
+
+    //* Draw tangents
     for (size_t i = 0; i < 5; i++) {
-      Line line;
-      drawLine(line.getPt1(), line.getPt2(), viewer);
+      Line tangent;
+      drawLine(tangent, viewer);
+      tangents.push_back(tangent);
     }
+
+    //* Get the conic coefficients from the tangents
+    std::vector<Point> conicPoints = conicCoefficientsTangent(tangents);
+
+    Eigen::VectorXd conicTangent = conicCoefficients(conicPoints);
+    viewer.push_conic(conicTangent, 0, 0, 200);
   }
   
   //* Render
-  viewer.display(); // on terminal
-  viewer.render("output.html");  // generate the output file (to open with your web browser)
+  viewer.display();
+  viewer.render("output.html"); // Open with weeb browser
 
   return 0;
 }
